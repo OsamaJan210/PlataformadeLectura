@@ -18,9 +18,14 @@ public class UserServiceImpl implements UserService {
     public ApiResponse createUser(User req){
         ApiResponse response =new ApiResponse();
         try{
+            if (userRepo.existsByEmail(req.getEmail())) {
+                response.setCode("200");
+                response.setMessage("Email Already Exsist");
+                response.setStatus(true);
+                return response; 
+            }
 
             req.setPassword(SecurityUtils.encryptMD5(req.getPassword()));
-            System.out.println(req.toString());
             userRepo.save(req);
             response.setCode("200");
             response.setMessage("USer Created");
