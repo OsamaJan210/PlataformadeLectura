@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("lectura/api-v1/users")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class UserController {
@@ -23,7 +23,6 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody User req){
-        System.out.println("Requeste================d"+req.toString());
         return responseEntityResult.responseEntity(userService.createUser(req));
 
     }
