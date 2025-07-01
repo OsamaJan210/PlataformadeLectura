@@ -27,7 +27,11 @@ public class UserController {
         return responseEntityResult.responseEntity(userService.createUser(req));
 
     }
-
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody User req){
+        System.out.println("Requeste================d"+req.toString());
+        return responseEntityResult.responseEntity(userService.loginUser(req));
+    }
 
 
 }
