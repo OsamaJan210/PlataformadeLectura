@@ -6,4 +6,5 @@ import com.fundacioesplai.lectura.utils.ApiResponse;
 
 public interface UserService {
     public ApiResponse createUser(User req);
+    public ApiResponse loginUser(User req);
 }
