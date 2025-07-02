@@ -4,11 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
+@Data
 public class BaseWithDateDomain implements Serializable {
 
     private static final long serialVersionUID = 3178939338874879300L;

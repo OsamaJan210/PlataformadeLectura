@@ -5,5 +5,6 @@ import com.fundacioesplai.lectura.model.User;
 import com.fundacioesplai.lectura.utils.ApiResponse;
 
 public interface UserService {
-    public ApiResponse createUser(User req);
+    public User createUser(User req);
+    public boolean userExsistByEmail(String email);
 }

@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Entity
 @Table(name = "books")
+
 @Data
 public class Book extends BaseWithDateDomain {
 
@@ -25,9 +26,7 @@ public class Book extends BaseWithDateDomain {
     private Genre genre;
 
     
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private Status status;
+    
 
     @ManyToOne
     @JoinColumn(name = "format_id")
