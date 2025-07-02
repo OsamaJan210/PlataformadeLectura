@@ -14,31 +14,27 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
-    @Override
-    public ApiResponse createUser(User req){
-        ApiResponse response =new ApiResponse();
-        try{
-            if (userRepo.existsByEmail(req.getEmail())) {
-                response.setCode("200");
-                response.setMessage("Email Already Exsist");
-                response.setStatus(true);
-                return response; 
-            }
 
+
+    @Override
+    public boolean userExsistByEmail(String email){
+       return userRepo.existsByEmail(email);
+    }
+
+    @Override
+    public User createUser(User req){
+        try{
+            
             req.setPassword(SecurityUtils.encryptMD5(req.getPassword()));
-            userRepo.save(req);
-            response.setCode("200");
-            response.setMessage("USer Created");
-            response.setStatus(true);
+            User user=userRepo.save(req);
+            return user;
+            
         }
         catch(Exception ex){
-            response.setCode("500");
-            response.setMessage(ex.getMessage());
+            throw new RuntimeException(ex.getMessage()); 
+            
         }
         
-
-
-        return  response;
     }
     @Override
     public ApiResponse loginUser(User req){
