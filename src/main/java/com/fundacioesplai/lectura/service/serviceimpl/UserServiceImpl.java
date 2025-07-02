@@ -36,4 +36,26 @@ public class UserServiceImpl implements UserService {
         }
         
     }
+    @Override
+    public ApiResponse loginUser(User req){
+        ApiResponse response =new ApiResponse();
+        try{
+            User user = userRepo.findByEmailAndPassword(req.getEmail(),SecurityUtils.encryptMD5(req.getPassword()));
+            if(user==null){
+                response.setCode("404");
+                response.setMessage("User not found");
+                return response;
+            }
+            
+            response.setCode("200");
+            response.setMessage("Login successful");
+            response.setStatus(true);
+            response.setData(user);
+        }
+        catch(Exception ex){
+            response.setCode("500");
+            response.setMessage(ex.getMessage());
+        }
+        return  response;
+    }
 }

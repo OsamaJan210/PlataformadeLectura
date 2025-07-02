@@ -40,7 +40,11 @@ public class UserController {
         return res;
 
     }
-
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody User req){
+        System.out.println("Requeste================d"+req.toString());
+        return responseEntityResult.responseEntity(userService.loginUser(req));
+    }
 
 
 }
