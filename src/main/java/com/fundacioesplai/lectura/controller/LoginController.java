@@ -1,5 +1,6 @@
 package com.fundacioesplai.lectura.controller;
 
+import com.fundacioesplai.lectura.dto.LoginResponse;
 import com.fundacioesplai.lectura.dto.LoginReq;
 import com.fundacioesplai.lectura.model.User;
 import com.fundacioesplai.lectura.service.UserService;
@@ -15,35 +16,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("lectura/api-v1/users")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
-public class UserController {
+public class LoginController {
 
     private final UserService userService;
     private final JwtUtil jwtUtil;
 
-    @PostMapping("/create")
-    public ApiResponse createUser(@RequestBody User req){
-        // return responseEntityResult.responseEntity(userService.createUser(req));
-        ApiResponse res = new ApiResponse<>();
-        if(userService.userExsistByEmail(req.getEmail())){
-            res.setMessage("User Already Exsist");
-            return res;
-        }
+    @PostMapping("/login")
+    public LoginResponse loginUser(@RequestBody LoginReq req){
+        LoginResponse resp=new LoginResponse<>();
+        User user =userService.loginUser(req);
+        if(user!=null){
+            resp.setMessage("Login Suscessfully");
+            String token = jwtUtil.generateToken(user.getUsername());
+            resp.setToken(token);
 
-        User user= userService.createUser(req);
-        if (user.getId() != null) {
-            res.setMessage("User Added Successfully");
-            res.setData(user);
+            return resp;
         }
-        else {
-            res.setMessage("User Added failed");
+        else{
+            resp.setMessage("Login Failed");
+            return resp;
         }
-        return res;
-
     }
-    
 
 
 }
