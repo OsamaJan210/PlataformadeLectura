@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 5px 0;
+            display: block;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f2f2f2;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #2980b9;
+            color: white;
+        }
+
+        input, textarea, button {
+            padding: 8px;
+            margin: 6px 0;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        button:hover {
+            background-color: #3498db;
+        }
+
+        .form-section {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        #message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h2>Dashboard</h2>
+    <a onclick="showSection('books')">📚 Books</a>
+    <a onclick="showSection('profile')">👤 My Profile</a>
+    <a onclick="showSection('users')">👥 Other Users</a>
+</div>
+
+<div class="content">
+    <div id="books" class="section">
+        <h2>Books</h2>
+
+        <table id="booksTable">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Genre</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Dynamic book rows -->
+            </tbody>
+        </table>
+
+        <div class="form-section">
+            <h3>Add New Book</h3>
+            <form id="addBookForm">
+                <input type="text" id="title" placeholder="Book Title" required>
+                <input type="text" id="author" placeholder="Author" required>
+                <input type="text" id="genre" placeholder="Genre" required>
+                <button type="submit">Add Book</button>
+            </form>
+            <div id="message"></div>
+        </div>
+    </div>
+
+    <div id="profile" class="section hidden">
+        <h2>My Profile</h2>
+        <p>Username: <strong>osama</strong></p>
+        <p>Email: <strong>osama@example.com</strong></p>
+        <p>Bio: <em>Hi, I'm Osama. I love coding and reading!</em></p>
+    </div>
+
+    <div id="users" class="section hidden">
+        <h2>Other Users</h2>
+        <p>Coming soon...</p>
+    </div>
+</div>
+
+<script>
+    // Replace with your real JWT token after login
+    const token = "YOUR_JWT_TOKEN_HERE";
+
+    function showSection(id) {
+        const sections = document.querySelectorAll('.section');
+        sections.forEach(section => section.classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+
+        if (id === 'books') {
+            loadBooks();
+        }
+    }
+
+    async function loadBooks() {
+        console.log("Rqss---------",localStorage.getItem("token"))
+        try {
+            const response = await fetch("http://localhost:8080/lectura/api-v1/books/getBooks", {
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token"),
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                showMessage("Failed to load books: " + response.statusText, true);
+                return;
+            }
+
+            const books = await response.json();
+            const tbody = document.querySelector('#booksTable tbody');
+            tbody.innerHTML = '';
+
+            books.forEach(book => {
+                const row = document.createElement('tr');
+
+                const titleCell = document.createElement('td');
+                titleCell.textContent = book.title || "";
+                row.appendChild(titleCell);
+
+                const authorCell = document.createElement('td');
+                authorCell.textContent = book.author || "";
+                row.appendChild(authorCell);
+
+                const genreCell = document.createElement('td');
+                genreCell.textContent = book.genre?.name || "";
+                row.appendChild(genreCell);
+
+                tbody.appendChild(row);
+            });
+            showMessage(""); // clear message on success
+        } catch (error) {
+            console.error('Error loading books:', error);
+            showMessage("Error loading books", true);
+        }
+    }
+
+    function showMessage(msg, isError = false) {
+        const msgDiv = document.getElementById('message');
+        msgDiv.textContent = msg;
+        msgDiv.style.color = isError ? 'red' : 'green';
+    }
+
+    document.getElementById('addBookForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value.trim();
+        const author = document.getElementById('author').value.trim();
+        const genreName = document.getElementById('genre').value.trim();
+
+        if (!title || !author || !genreName) {
+            showMessage("All fields are required", true);
+            return;
+        }
+
+        // Prepare book payload — adjust to your backend's expected format
+        const newBook = {
+            title: title,
+            author: author,
+            genre: { name: genreName }
+        };
+
+        try {
+            
+            const response = await fetch("http://localhost:8080/lectura/api-v1/books/addBook", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + localStorage.getItem("token"),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newBook)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                showMessage("Failed to add book: " + (errorData.message || response.statusText), true);
+                return;
+            }
+
+            showMessage("Book added successfully!");
+            // Clear form
+            document.getElementById('addBookForm').reset();
+            // Reload books list
+            loadBooks();
+
+        } catch (error) {
+            console.error('Error adding book:', error);
+            showMessage("Error adding book", true);
+        }
+    });
+
+    // Initial load
+    window.onload = () => {
+        showSection('books');
+    };
+</script>
+</body>
+</html>

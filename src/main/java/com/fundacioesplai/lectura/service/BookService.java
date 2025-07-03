@@ -10,6 +10,7 @@ import com.fundacioesplai.lectura.utils.ApiResponse;
 public interface BookService {
     public Book createBook(Book req);
     public List<Book> search(String keyword, Integer genreId, Integer statusId, Integer formatId);
+    public List<Book> getBooks();
     public BooksStatus addStatusByUser(BooksStatus req);
     public List<BooksStatus> statusByBookIdanduserId(BooksStatus req);
 

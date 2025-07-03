@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login (AJAX)</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #667eea;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #5a67d8;
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .signup-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .signup-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+    <script>
+        async function loginUser(event) {
+            event.preventDefault();
+            const email = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            const response = await fetch("/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, password })
+            });
+
+            const result = await response.json();
+            const messageDiv = document.getElementById("message");
+
+            if (response.ok) {
+                messageDiv.style.color = "green";
+                messageDiv.textContent = result.message + " | Token: " + result.token;
+
+                // Optional: store token
+                localStorage.setItem("token", result.token);
+
+                // Redirect to dashboard after 1 second
+                setTimeout(() => {
+                    window.location.href = "/ui/dashboard";
+                }, 1000);
+
+            } else {
+                messageDiv.style.color = "red";
+                messageDiv.textContent = result.message || "Login failed";
+            }
+        }
+    </script>
+</head>
+<body>
+<div class="login-container">
+    <h2>Login</h2>
+
+    <div id="message"></div>
+
+    <form onsubmit="loginUser(event)">
+        <label>Email:</label>
+        <input type="text" id="username" required>
+
+        <label>Password:</label>
+        <input type="password" id="password" required>
+
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="signup-link">
+        Don’t have an account? <a href="/ui/signup">Sign up</a>
+    </div>
+</div>
+</body>
+</html>
