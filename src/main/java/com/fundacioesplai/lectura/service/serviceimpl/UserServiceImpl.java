@@ -4,7 +4,6 @@ import com.fundacioesplai.lectura.dto.LoginReq;
 import com.fundacioesplai.lectura.model.User;
 import com.fundacioesplai.lectura.repository.UserRepo;
 import com.fundacioesplai.lectura.service.UserService;
-import com.fundacioesplai.lectura.utils.ApiResponse;
 import com.fundacioesplai.lectura.utils.SecurityUtils;
 
 import lombok.AllArgsConstructor;

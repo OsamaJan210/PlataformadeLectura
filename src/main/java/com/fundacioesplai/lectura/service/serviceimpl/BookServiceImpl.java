@@ -103,5 +103,10 @@ public class BookServiceImpl implements BookService {
         return booksStatus;
 
     }
+    @Override
+    public List<Book> getBooks(){
+        return bookRepo.findAll();
+    }
+
     
 }

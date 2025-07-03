@@ -68,6 +68,10 @@ public class BookController {
             @RequestParam(required = false) Integer formatId) {
         return bookService.search(keyword, genreId, statusId, formatId);
     }
+    @GetMapping("/getBooks")
+    public List<Book> getBooks() {
+        return bookService.getBooks();
+    }
     @PostMapping("/addStatusByUser")
     public ApiResponse addStatusByUser(@RequestBody BooksStatus req) {
         ApiResponse res = new ApiResponse<>();
