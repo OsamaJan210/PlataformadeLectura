@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Sign Up</title>
+    <title>Plataforma de Lectura</title>
     <meta charset="UTF-8">
     <style>
         body {
@@ -35,7 +36,8 @@
             font-weight: bold;
         }
 
-        input, textarea {
+        input,
+        textarea {
             width: 100%;
             padding: 10px;
             margin-top: 5px;
@@ -93,59 +95,69 @@
             const profilePicture = document.getElementById("profilePicture").value;
             const bio = document.getElementById("bio").value;
 
-            const response = await fetch("/auth/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ username, email, password, profilePicture, bio })
-            });
+            try {
+                const response = await fetch("/lectura/api-v1/users/create", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ username, email, password, profilePicture, bio })
+                });
 
-            const result = await response.json();
-            const messageDiv = document.getElementById("message");
+                const result = await response.json();
+                const messageDiv = document.getElementById("message");
 
-            if (response.ok) {
-                messageDiv.style.color = "green";
-                messageDiv.textContent = result.message || "Registered successfully!";
-                // Optionally redirect
-                setTimeout(() => {
-                    window.location.href = "/ui/login-page";
-                }, 1500);
-            } else {
+                if (response.ok) {
+                    messageDiv.style.color = "green";
+                    messageDiv.textContent = result.message || "Registered successfully!";
+                    // Redirigir opcionalmente al login
+                    setTimeout(() => {
+                        window.location.href = "/ui/login-page";
+                    }, 1500);
+                } else {
+                    messageDiv.style.color = "red";
+                    messageDiv.textContent = result.message || "Registration failed.";
+                }
+            } catch (error) {
+                const messageDiv = document.getElementById("message");
                 messageDiv.style.color = "red";
-                messageDiv.textContent = result.message || "Registration failed.";
+                messageDiv.textContent = "Error connecting to server.";
+                console.error(error);
             }
         }
     </script>
+
 </head>
+
 <body>
-<div class="signup-container">
-    <h2>Sign Up</h2>
+    <div class="signup-container">
+        <h2>Sign Up</h2>
 
-    <div id="message"></div>
+        <div id="message"></div>
 
-    <form onsubmit="registerUser(event)">
-        <label>Username:</label>
-        <input type="text" id="username" required>
+        <form onsubmit="registerUser(event)">
+            <label>Username:</label>
+            <input type="text" id="username" required>
 
-        <label>Email:</label>
-        <input type="email" id="email" required>
+            <label>Email:</label>
+            <input type="email" id="email" required>
 
-        <label>Password:</label>
-        <input type="password" id="password" required>
+            <label>Password:</label>
+            <input type="password" id="password" required>
 
-        <label>Profile Picture URL:</label>
-        <input type="text" id="profilePicture" placeholder="/uploads/your-image.jpg">
+            <label>Profile Picture URL:</label>
+            <input type="text" id="profilePicture" placeholder="/uploads/your-image.jpg">
 
-        <label>Bio:</label>
-        <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
+            <label>Bio:</label>
+            <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
 
-        <button type="submit">Register</button>
-    </form>
+            <button type="submit">Register</button>
+        </form>
 
-    <div class="login-link">
-        Already have an account? <a href="/ui/login-page">Login</a>
+        <div class="login-link">
+            Already have an account? <a href="/ui/login-page">Login</a>
+        </div>
     </div>
-</div>
 </body>
+
 </html>

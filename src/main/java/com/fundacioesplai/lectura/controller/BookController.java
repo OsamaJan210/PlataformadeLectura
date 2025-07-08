@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fundacioesplai.lectura.model.Book;
 import com.fundacioesplai.lectura.model.BooksStatus;
-import com.fundacioesplai.lectura.model.User;
 import com.fundacioesplai.lectura.service.BookService;
-import com.fundacioesplai.lectura.service.UserService;
 import com.fundacioesplai.lectura.utils.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -28,70 +26,66 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("/create")
-    public ApiResponse createBook(@RequestBody Book req) {
+    public ResponseEntity<ApiResponse> createBook(@RequestBody Book req) {
         ApiResponse res = new ApiResponse<>();
         Book book = bookService.createBook(req);
-        if (book.getId() != null) {
-            res.setMessage("Book Added Successfully");
+        if (book != null && book.getId() != null) {
+            res.setMessage("Book added successfully");
             res.setData(book);
+            return ResponseEntity.ok(res);
+        } else {
+            res.setMessage("Failed to add book");
+            return ResponseEntity.status(400).body(res);
         }
-        else {
-            res.setMessage("Book Added failed");
-        }
-        return res;
-
     }
 
     @PostMapping("/update")
-    public ApiResponse UpdateBook(@RequestBody Book req) {
+    public ResponseEntity<ApiResponse> updateBook(@RequestBody Book req) {
         ApiResponse res = new ApiResponse<>();
-        Book book = bookService.createBook(req);
-
-        if (book.getId() != null) {
-                res.setMessage("Book update Successfully");
-                res.setData(book);
-
+        Book book = bookService.createBook(req); // Asumo que createBook hace upsert
+        if (book != null && book.getId() != null) {
+            res.setMessage("Book updated successfully");
+            res.setData(book);
+            return ResponseEntity.ok(res);
+        } else {
+            res.setMessage("Failed to update book");
+            return ResponseEntity.status(400).body(res);
         }
-        else {
-            res.setMessage("Book update failed");
-        }
-
-        return res;
-
     }
 
-    @GetMapping("/search")
-    public List<Book> searchBooks(
-            @RequestParam(required = false) String keyword,
-            @RequestParam(required = false) Integer genreId,
-            @RequestParam(required = false) Integer statusId,
-            @RequestParam(required = false) Integer formatId) {
-        return bookService.search(keyword, genreId, statusId, formatId);
-    }
+  @GetMapping("/search")
+public ResponseEntity<List<Book>> searchBooks(
+        @RequestParam(required = false) Integer genreId,
+        @RequestParam(required = false) Integer formatId) {
+    List<Book> books = bookService.search(null, genreId, null, formatId);
+    return ResponseEntity.ok(books);
+}
+
+
+
     @GetMapping("/getBooks")
-    public List<Book> getBooks() {
-        return bookService.getBooks();
+    public ResponseEntity<List<Book>> getBooks() {
+        List<Book> books = bookService.getBooks();
+        return ResponseEntity.ok(books);
     }
+
     @PostMapping("/addStatusByUser")
-    public ApiResponse addStatusByUser(@RequestBody BooksStatus req) {
+    public ResponseEntity<ApiResponse> addStatusByUser(@RequestBody BooksStatus req) {
         ApiResponse res = new ApiResponse<>();
+        List<BooksStatus> existingStatuses = bookService.statusByBookIdanduserId(req);
 
-        List<BooksStatus> booksStatus=bookService.statusByBookIdanduserId(req);
-        if(booksStatus.size()>0){
-            req.setId(booksStatus.get(0).getId());
-        }
-        BooksStatus book = bookService.addStatusByUser(req);
-
-        if (book.getId() != null) {
-                res.setMessage("Book Status updated");
-                res.setData(book);
-
-        }
-        else {
-            res.setMessage("Book Status update failed");
+        if (existingStatuses != null && !existingStatuses.isEmpty()) {
+            req.setId(existingStatuses.get(0).getId());
         }
 
-        return res;
-
+        BooksStatus savedStatus = bookService.addStatusByUser(req);
+        if (savedStatus != null && savedStatus.getId() != null) {
+            res.setMessage("Book status updated");
+            res.setData(savedStatus);
+            return ResponseEntity.ok(res);
+        } else {
+            res.setMessage("Failed to update book status");
+            return ResponseEntity.status(400).body(res);
+        }
     }
 }
