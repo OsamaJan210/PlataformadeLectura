@@ -12,6 +12,13 @@ import com.fundacioesplai.lectura.service.UserService;
 import com.fundacioesplai.lectura.utils.SecurityUtils;
 
 import lombok.AllArgsConstructor;
+<<<<<<< HEAD
+=======
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+>>>>>>> f5df49efce11ad57e42e2873eee18a232fffb6cf
 
 @Service("UserService")
 @AllArgsConstructor
@@ -48,6 +55,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+<<<<<<< HEAD
     @Override
     public User findByUsername(String username) {
         return userRepo.findByUsername(username);
@@ -61,4 +69,14 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+=======
+    @Override 
+    public List<User> getallUser(){
+       return userRepo.findAll();
+    }
+    @Override
+    public User getUserById(Integer id ){
+        return userRepo.findByUserId(id).get();
+    }
+>>>>>>> f5df49efce11ad57e42e2873eee18a232fffb6cf
 }
