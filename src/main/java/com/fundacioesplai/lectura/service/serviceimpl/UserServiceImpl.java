@@ -1,7 +1,6 @@
 package com.fundacioesplai.lectura.service.serviceimpl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,13 +11,6 @@ import com.fundacioesplai.lectura.service.UserService;
 import com.fundacioesplai.lectura.utils.SecurityUtils;
 
 import lombok.AllArgsConstructor;
-<<<<<<< HEAD
-=======
-
-import java.util.List;
-
-import org.springframework.stereotype.Service;
->>>>>>> f5df49efce11ad57e42e2873eee18a232fffb6cf
 
 @Service("UserService")
 @AllArgsConstructor
@@ -44,7 +36,6 @@ public class UserServiceImpl implements UserService {
         }
 
     }
-
     @Override
     public User loginUser(LoginReq req) {
         try {
@@ -55,7 +46,16 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-<<<<<<< HEAD
+    @Override 
+    public List<User> getallUser(){
+       return userRepo.findAll();
+    }
+    @Override
+    public User getUserById(Integer id ){
+        return userRepo.findById(id).get();
+    }
+
+
     @Override
     public User findByUsername(String username) {
         return userRepo.findByUsername(username);
@@ -63,20 +63,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findByUsernameNot(String username) {
-        return userRepo.findAll() // <-- Cambiar UserRepo a userRepo
-                .stream()
-                .filter(u -> !u.getUsername().equals(username))
-                .collect(Collectors.toList());
+        return userRepo.findByUsernameNot(username);
     }
-
-=======
-    @Override 
-    public List<User> getallUser(){
-       return userRepo.findAll();
-    }
-    @Override
-    public User getUserById(Integer id ){
-        return userRepo.findByUserId(id).get();
-    }
->>>>>>> f5df49efce11ad57e42e2873eee18a232fffb6cf
 }
