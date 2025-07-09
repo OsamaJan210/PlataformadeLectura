@@ -1,13 +1,15 @@
 package com.fundacioesplai.lectura.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
 @Table(name = "book_status")
 @Data
 public class Status {
-
     @Id
     private Integer id;
 
@@ -16,5 +18,4 @@ public class Status {
 
     @Column(length = 255)
     private String description;
-
 }

@@ -8,24 +8,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fundacioesplai.lectura.dto.BooksStatusDTO;
 import com.fundacioesplai.lectura.model.BooksStatus;
-import com.fundacioesplai.lectura.service.BooksStatusService;
+import com.fundacioesplai.lectura.service.serviceimpl.BooksStatusService;
 
 @RestController
-@RequestMapping("/lectura/api-v1/booksStatus")
+@RequestMapping("/api/books-status")
 public class BooksStatusController {
 
     @Autowired
     private BooksStatusService booksStatusService;
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addBookStatus(@RequestBody BooksStatus booksStatus) {
+    @PostMapping("/set-status")
+    public ResponseEntity<?> setBookStatus(@RequestBody BooksStatusDTO dto) {
         try {
-            BooksStatus savedStatus = booksStatusService.saveOrUpdate(booksStatus);
-            return ResponseEntity.ok(savedStatus);
+            BooksStatus saved = booksStatusService.setBookStatus(
+                dto.getUserId(),
+                dto.getBookId(),
+                dto.getStatusId(),
+                dto.getComments(),
+                dto.getRating()
+            );
+            return ResponseEntity.ok(saved);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Error guardando el estado del libro: " + e.getMessage());
+                    .body("Error guardando el estado del libro: " + e.getMessage());
         }
     }
 }
