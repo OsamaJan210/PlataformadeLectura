@@ -13,6 +13,7 @@ import com.fundacioesplai.lectura.utils.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
+
 @RestController
 @RequestMapping("lectura/api-v1/users")
 @RequiredArgsConstructor
@@ -42,6 +43,19 @@ public class UserController {
         return res;
 
     }
+
+    @GetMapping("/getallUser")
+    public List<User> getallUser(){
+        return userService.getallUser();
+
+    }
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Integer id ){
+        return userService.getUserById(id);
+
+    }
+    
+
 
 
 }

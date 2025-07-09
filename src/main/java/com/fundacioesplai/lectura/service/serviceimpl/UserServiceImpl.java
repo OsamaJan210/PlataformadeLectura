@@ -7,6 +7,9 @@ import com.fundacioesplai.lectura.service.UserService;
 import com.fundacioesplai.lectura.utils.SecurityUtils;
 
 import lombok.AllArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 @Service("UserService")
@@ -44,5 +47,14 @@ public class UserServiceImpl implements UserService {
             catch (Exception ex){
                 return null;
             }
+    }
+
+    @Override 
+    public List<User> getallUser(){
+       return userRepo.findAll();
+    }
+    @Override
+    public User getUserById(Integer id ){
+        return userRepo.findByUserId(id).get();
     }
 }
