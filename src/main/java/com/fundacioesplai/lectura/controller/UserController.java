@@ -7,8 +7,13 @@ import com.fundacioesplai.lectura.utils.ApiResponse;
 import com.fundacioesplai.lectura.utils.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,6 +46,17 @@ public class UserController {
             res.setMessage("User Added failed");
         }
         return res;
+
+    }
+
+    @GetMapping("/getallUser")
+    public List<User> getallUser(){
+        return userService.getallUser();
+
+    }
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Integer id ){
+        return userService.getUserById(id);
 
     }
     
