@@ -1,273 +1,459 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <title>Dashboard</title>
-    <meta charset="UTF-8">
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+  <title>Plataforma de Lectura</title>
+  <meta charset="UTF-8" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            display: flex;
-            height: 100vh;
-        }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      height: 100vh;
+    }
 
-        .sidebar {
-            width: 220px;
-            background-color: #2c3e50;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-        }
+    .sidebar {
+      width: 220px;
+      background-color: #2c3e50;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
 
-        .sidebar h2 {
-            margin-bottom: 20px;
-        }
+    .sidebar h2 {
+      margin-bottom: 20px;
+    }
 
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            padding: 10px;
-            margin: 5px 0;
-            display: block;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      padding: 10px;
+      margin: 5px 0;
+      display: block;
+      border-radius: 5px;
+      cursor: pointer;
+    }
 
-        .sidebar a:hover {
-            background-color: #34495e;
-        }
+    .sidebar a:hover {
+      background-color: #34495e;
+    }
 
-        .content {
-            flex-grow: 1;
-            padding: 20px;
-            background-color: #f2f2f2;
-            overflow-y: auto;
-        }
+    .content {
+      flex-grow: 1;
+      padding: 20px;
+      background-color: #f2f2f2;
+      overflow-y: auto;
+    }
 
-        .hidden {
-            display: none;
-        }
+    .hidden {
+      display: none;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-        }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+    }
 
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
 
-        th {
-            background-color: #2980b9;
-            color: white;
-        }
+    th {
+      background-color: #2980b9;
+      color: white;
+    }
 
-        input, textarea, button {
-            padding: 8px;
-            margin: 6px 0;
-            width: 100%;
-            font-size: 14px;
-        }
+    td.title-cell {
+      cursor: pointer;
+    }
 
-        button {
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 4px;
-        }
+    td.title-cell:hover {
+      text-decoration: underline;
+    }
 
-        button:hover {
-            background-color: #3498db;
-        }
+    input,
+    textarea,
+    select,
+    button {
+      padding: 8px;
+      margin: 6px 0;
+      width: 100%;
+      font-size: 14px;
+    }
 
-        .form-section {
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
+    button {
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
 
-        #message {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-    </style>
+    button:hover {
+      background-color: #3498db;
+    }
+
+    .form-section {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    #message {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .filters {
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      max-width: 600px;
+    }
+
+    .filters select {
+      flex: 1 1 150px;
+      min-width: 150px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 5% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .modal-content .close {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .book-image {
+      width: 200px;
+      height: auto;
+      margin: 10px 0;
+    }
+
+    #readStatusBtn {
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #readStatusBtn.read {
+      background-color: #2ecc71;
+    }
+  </style>
 </head>
+
 <body>
-<div class="sidebar">
+  <div class="sidebar">
     <h2>Dashboard</h2>
     <a onclick="showSection('books')">📚 Books</a>
     <a onclick="showSection('profile')">👤 My Profile</a>
     <a onclick="showSection('users')">👥 Other Users</a>
-</div>
+    <button id="logoutBtn"
+      style="margin-top: auto; padding: 10px; background:#e74c3c; border:none; color:white; cursor:pointer; border-radius:5px;">Cerrar
+      sesión</button>
+  </div>
 
-<div class="content">
+  <div class="content">
     <div id="books" class="section">
-        <h2>Books</h2>
+      <h2>Books</h2>
 
-        <table id="booksTable">
-            <thead>
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Genre</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Dynamic book rows -->
-            </tbody>
-        </table>
+      <div class="filters">
+        <select id="filterGenre">
+          <option value="">Todos los géneros</option>
+          <option value="1">Ficción</option>
+          <option value="2">No ficción</option>
+          <option value="3">Fantasía</option>
+          <option value="4">Ciencia ficción</option>
+          <option value="5">Misterio</option>
+          <option value="6">Romance</option>
+          <option value="7">Histórica</option>
+          <option value="8">Terror</option>
+          <option value="9">Biografía</option>
+          <option value="10">Poesía</option>
+        </select>
 
-        <div class="form-section">
-            <h3>Add New Book</h3>
-            <form id="addBookForm">
-                <input type="text" id="title" placeholder="Book Title" required>
-                <input type="text" id="author" placeholder="Author" required>
-                <input type="text" id="genre" placeholder="Genre" required>
-                <button type="submit">Add Book</button>
-            </form>
-            <div id="message"></div>
-        </div>
+        <select id="filterFormat">
+          <option value="">Todos los formatos</option>
+          <option value="1">Físico</option>
+          <option value="2">Digital</option>
+          <option value="3">Audiolibro</option>
+          <option value="4">PDF</option>
+          <option value="5">ePub</option>
+        </select>
+      </div>
+
+      <table id="booksTable">
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Género</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div id="message"></div>
+
+      <form id="addBookForm" class="form-section">
+        <h3>Agregar Nuevo Libro</h3>
+        <input type="text" id="title" placeholder="Título del libro" required />
+        <input type="text" id="author" placeholder="Autor" required />
+
+        <select id="genre" required>
+          <option value="">Selecciona un género</option>
+          <option value="1">Ficción</option>
+          <option value="2">No ficción</option>
+          <option value="3">Fantasía</option>
+          <option value="4">Ciencia ficción</option>
+          <option value="5">Misterio</option>
+          <option value="6">Romance</option>
+          <option value="7">Histórica</option>
+          <option value="8">Terror</option>
+          <option value="9">Biografía</option>
+          <option value="10">Poesía</option>
+        </select>
+
+        <select id="format" required>
+          <option value="">Selecciona un formato</option>
+          <option value="1">Físico</option>
+          <option value="2">Digital</option>
+          <option value="3">Audiolibro</option>
+          <option value="4">PDF</option>
+          <option value="5">ePub</option>
+        </select>
+
+        <button type="submit">Agregar Libro</button>
+      </form>
     </div>
 
     <div id="profile" class="section hidden">
-        <h2>My Profile</h2>
-        <p>Username: <strong>osama</strong></p>
-        <p>Email: <strong>osama@example.com</strong></p>
-        <p>Bio: <em>Hi, I'm Osama. I love coding and reading!</em></p>
+      <h2>My Profile</h2>
+      <p>Username: <strong>osama</strong></p>
+      <p>Email: <strong>osama@example.com</strong></p>
+      <p>Bio: <em>Hi, I'm Osama. I love coding and reading!</em></p>
     </div>
 
     <div id="users" class="section hidden">
-        <h2>Other Users</h2>
-        <p>Coming soon...</p>
+      <h2>Other Users</h2>
+      <p>Coming soon...</p>
     </div>
-</div>
+  </div>
 
-<script>
-    // Replace with your real JWT token after login
-    const token = "YOUR_JWT_TOKEN_HERE";
+  <!-- MODAL -->
+  <div id="bookModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="bookImage" src="https://via.placeholder.com/200x300?text=Libro" alt="Imagen del libro" class="book-image">
+      <h2 id="modalTitle">Título</h2>
+      <p id="modalAuthor">Autor</p>
+      <p id="modalGenre">Género</p>
+      <p id="modalFormat">Formato</p>
+      <button id="readStatusBtn">❌ No leído</button>
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token") || "YOUR_JWT_TOKEN_HERE";
 
     function showSection(id) {
-        const sections = document.querySelectorAll('.section');
-        sections.forEach(section => section.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-
-        if (id === 'books') {
-            loadBooks();
-        }
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
     }
 
-    async function loadBooks() {
-        console.log("Rqss---------",localStorage.getItem("token"))
-        try {
-            const response = await fetch("http://localhost:8080/lectura/api-v1/books/getBooks", {
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("token"),
-                    "Content-Type": "application/json"
-                }
-            });
+    async function loadBooks(filters = {}) {
+      try {
+        let url = "http://localhost:8080/lectura/api-v1/books/search";
+        const params = new URLSearchParams();
+        if (filters.genreId) params.append('genreId', filters.genreId);
+        if (filters.formatId) params.append('formatId', filters.formatId);
+        if (Array.from(params).length > 0) url += '?' + params.toString();
 
-            if (!response.ok) {
-                showMessage("Failed to load books: " + response.statusText, true);
-                return;
-            }
+        const response = await fetch(url, {
+          headers: { "Authorization": "Bearer " + token }
+        });
 
-            const books = await response.json();
-            const tbody = document.querySelector('#booksTable tbody');
-            tbody.innerHTML = '';
-
-            books.forEach(book => {
-                const row = document.createElement('tr');
-
-                const titleCell = document.createElement('td');
-                titleCell.textContent = book.title || "";
-                row.appendChild(titleCell);
-
-                const authorCell = document.createElement('td');
-                authorCell.textContent = book.author || "";
-                row.appendChild(authorCell);
-
-                const genreCell = document.createElement('td');
-                genreCell.textContent = book.genre?.name || "";
-                row.appendChild(genreCell);
-
-                tbody.appendChild(row);
-            });
-            showMessage(""); // clear message on success
-        } catch (error) {
-            console.error('Error loading books:', error);
-            showMessage("Error loading books", true);
+        if (!response.ok) {
+          showMessage("Error cargando libros: " + response.statusText, true);
+          return;
         }
+
+        const books = await response.json();
+        const tbody = document.querySelector('#booksTable tbody');
+        tbody.innerHTML = '';
+
+        if (books.length === 0) {
+          showMessage("No hay ningún libro que cumpla esos filtros.");
+          return;
+        }
+
+        books.forEach(book => {
+          const row = document.createElement('tr');
+
+          const titleCell = document.createElement('td');
+          titleCell.textContent = book.title || "";
+          titleCell.classList.add('title-cell');
+          titleCell.addEventListener('click', () => showBookModal(book));
+          row.appendChild(titleCell);
+
+          const authorCell = document.createElement('td');
+          authorCell.textContent = book.author || "";
+          row.appendChild(authorCell);
+
+          const genreCell = document.createElement('td');
+          genreCell.textContent = book.genre?.name || "";
+          row.appendChild(genreCell);
+
+          tbody.appendChild(row);
+        });
+        showMessage("");
+      } catch (error) {
+        console.error('Error cargando libros:', error);
+        showMessage("Error cargando libros", true);
+      }
     }
+
+    function showBookModal(book) {
+      document.getElementById('modalTitle').textContent = book.title;
+      document.getElementById('modalAuthor').textContent = 'Autor: ' + book.author;
+      document.getElementById('modalGenre').textContent = 'Género: ' + (book.genre?.name || 'N/A');
+      document.getElementById('modalFormat').textContent = 'Formato: ' + (book.format?.name || 'N/A');
+      document.getElementById('bookImage').src = 'https://dical.es/modules/ph_simpleblog/featured/18.jpg';
+
+      const statusBtn = document.getElementById('readStatusBtn');
+      statusBtn.textContent = '❌ No leído';
+      statusBtn.classList.remove('read');
+      statusBtn.style.backgroundColor = '#e74c3c';
+
+      document.getElementById('bookModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('bookModal').style.display = 'none';
+    }
+
+    document.getElementById('readStatusBtn').addEventListener('click', function () {
+      if (this.classList.contains('read')) {
+        this.textContent = '❌ No leído';
+        this.classList.remove('read');
+        this.style.backgroundColor = '#e74c3c';
+      } else {
+        this.textContent = '✅ Leído';
+        this.classList.add('read');
+        this.style.backgroundColor = '#2ecc71';
+      }
+    });
 
     function showMessage(msg, isError = false) {
-        const msgDiv = document.getElementById('message');
-        msgDiv.textContent = msg;
-        msgDiv.style.color = isError ? 'red' : 'green';
+      const msgDiv = document.getElementById('message');
+      msgDiv.textContent = msg;
+      msgDiv.style.color = isError ? 'red' : 'green';
     }
 
     document.getElementById('addBookForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
+      e.preventDefault();
+      const title = document.getElementById('title').value.trim();
+      const author = document.getElementById('author').value.trim();
+      const genreId = document.getElementById('genre').value;
+      const formatId = document.getElementById('format').value;
 
-        const title = document.getElementById('title').value.trim();
-        const author = document.getElementById('author').value.trim();
-        const genreName = document.getElementById('genre').value.trim();
+      if (!title || !author || !genreId || !formatId) {
+        showMessage("Todos los campos son obligatorios", true);
+        return;
+      }
 
-        if (!title || !author || !genreName) {
-            showMessage("All fields are required", true);
-            return;
+      const newBook = {
+        title: title,
+        author: author,
+        genre: { id: parseInt(genreId) },
+        format: { id: parseInt(formatId) }
+      };
+
+      try {
+        const response = await fetch("http://localhost:8080/lectura/api-v1/books/addBook", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(newBook)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          showMessage("Error agregando libro: " + (errorData.message || response.statusText), true);
+          return;
         }
 
-        // Prepare book payload — adjust to your backend's expected format
-        const newBook = {
-            title: title,
-            author: author,
-            genre: { name: genreName }
-        };
-
-        try {
-            
-            const response = await fetch("http://localhost:8080/lectura/api-v1/books/addBook", {
-                method: "POST",
-                headers: {
-                    "Authorization": "Bearer " + localStorage.getItem("token"),
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(newBook)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                showMessage("Failed to add book: " + (errorData.message || response.statusText), true);
-                return;
-            }
-
-            showMessage("Book added successfully!");
-            // Clear form
-            document.getElementById('addBookForm').reset();
-            // Reload books list
-            loadBooks();
-
-        } catch (error) {
-            console.error('Error adding book:', error);
-            showMessage("Error adding book", true);
-        }
+        showMessage("Libro agregado con éxito!");
+        document.getElementById('addBookForm').reset();
+        loadBooks();
+      } catch (error) {
+        console.error('Error agregando libro:', error);
+        showMessage("Error agregando libro", true);
+      }
     });
 
-    // Initial load
+    ['filterGenre', 'filterFormat'].forEach(id => {
+      document.getElementById(id).addEventListener('change', () => {
+        const genreId = document.getElementById('filterGenre').value;
+        const formatId = document.getElementById('filterFormat').value;
+        const filters = {};
+        if (genreId) filters.genreId = genreId;
+        if (formatId) filters.formatId = formatId;
+        loadBooks(filters);
+      });
+    });
+
     window.onload = () => {
-        showSection('books');
+      showSection('books');
+      loadBooks();
     };
-</script>
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      window.location.href = 'login-page';
+    });
+  </script>
 </body>
+
 </html>

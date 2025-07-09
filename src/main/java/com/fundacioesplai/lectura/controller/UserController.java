@@ -1,6 +1,11 @@
 package com.fundacioesplai.lectura.controller;
 
-import com.fundacioesplai.lectura.dto.LoginReq;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fundacioesplai.lectura.model.User;
 import com.fundacioesplai.lectura.service.UserService;
 import com.fundacioesplai.lectura.utils.ApiResponse;
@@ -8,16 +13,6 @@ import com.fundacioesplai.lectura.utils.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("lectura/api-v1/users")
@@ -60,6 +55,7 @@ public class UserController {
 
     }
     
+
 
 
 }
