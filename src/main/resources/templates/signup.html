@@ -109,14 +109,14 @@
 
                 if (response.ok) {
                     messageDiv.style.color = "green";
-                    messageDiv.textContent = result.message || "Registered successfully!";
+                    messageDiv.textContent = result.message || "Registro exitoso!";
                     // Redirigir opcionalmente al login
                     setTimeout(() => {
                         window.location.href = "/ui/login-page";
                     }, 1500);
                 } else {
                     messageDiv.style.color = "red";
-                    messageDiv.textContent = result.message || "Registration failed.";
+                    messageDiv.textContent = result.message || "Registratio fallido.";
                 }
             } catch (error) {
                 const messageDiv = document.getElementById("message");
@@ -131,31 +131,31 @@
 
 <body>
     <div class="signup-container">
-        <h2>Sign Up</h2>
+        <h2>Crear cuenta</h2>
 
         <div id="message"></div>
 
         <form onsubmit="registerUser(event)">
-            <label>Username:</label>
+            <label>Usuario:</label>
             <input type="text" id="username" required>
 
             <label>Email:</label>
             <input type="email" id="email" required>
 
-            <label>Password:</label>
+            <label>Contraseña:</label>
             <input type="password" id="password" required>
 
-            <label>Profile Picture URL:</label>
+            <label>Foto de perfil URL:</label>
             <input type="text" id="profilePicture" placeholder="/uploads/your-image.jpg">
 
-            <label>Bio:</label>
+            <label>Biografía:</label>
             <textarea id="bio" rows="3" placeholder="Tell us about yourself..."></textarea>
 
-            <button type="submit">Register</button>
+            <button type="submit">Registrar</button>
         </form>
 
         <div class="login-link">
-            Already have an account? <a href="/ui/login-page">Login</a>
+            Ya tienes cuenta? <a href="/ui/login-page">Loguearse</a>
         </div>
     </div>
 </body>

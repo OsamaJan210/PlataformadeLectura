@@ -114,14 +114,14 @@
 
             } else {
                 messageDiv.style.color = "red";
-                messageDiv.textContent = result.message || "Login failed";
+                messageDiv.textContent = result.message || "Logueado fallido.";
             }
         }
     </script>
 </head>
 <body>
 <div class="login-container">
-    <h2>Login</h2>
+    <h2>Iniciar Sesion</h2>
 
     <div id="message"></div>
 
@@ -129,14 +129,14 @@
         <label>Email:</label>
         <input type="text" id="username" required>
 
-        <label>Password:</label>
+        <label>Contraseña:</label>
         <input type="password" id="password" required>
 
-        <button type="submit">Login</button>
+        <button type="submit">Loguearse</button>
     </form>
 
     <div class="signup-link">
-        Don’t have an account? <a href="/ui/signup">Sign up</a>
+       No tienes cuenta? <a href="/ui/signup">Crear Cuenta</a>
     </div>
 </div>
 </body>
